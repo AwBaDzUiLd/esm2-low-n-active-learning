@@ -1,0 +1,8 @@
+CP2C9_HUMAN_Amorosi_2021_activity
+CASP3_HUMAN_Roychowdhury_2020
+OXDA_RHOTO_Vanella_2023_activity
+VKOR1_HUMAN_Chiasson_2020_abundance
+PTEN_HUMAN_Matreyek_2021
+EPHB2_HUMAN_Tsuboyama_2023_1F0M
+TRPC_THEMA_Chan_2017
+KKA2_KLEPN_Melnikov_2014
