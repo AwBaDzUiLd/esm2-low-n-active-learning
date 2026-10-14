@@ -1,0 +1,84 @@
+done: SPG1_STRSG_Olson_2014  (pool=1045, top-5% size=53)
+done: RASK_HUMAN_Weng_2022_binding-DARPin_K55  (pool=3084, top-5% size=155)
+done: RASK_HUMAN_Weng_2022_abundance  (pool=3066, top-5% size=154)
+done: Q53Z42_HUMAN_McShan_2019_binding-TAPBPR  (pool=3344, top-5% size=168)
+done: Q53Z42_HUMAN_McShan_2019_expression  (pool=3344, top-5% size=168)
+done: CCR5_HUMAN_Gill_2023  (pool=6137, top-5% size=307)
+done: GRB2_HUMAN_Faure_2021  (pool=1034, top-5% size=52)
+done: SPA_STAAU_Tsuboyama_2023_1LP1  (pool=1035, top-5% size=52)
+
+=== Top-5% enrichment at 96 labels (1.0 = random; mean of 20 seeds) ===
+strategy                                 random  zs_greedy  greedy   ucb  uncertainty
+DMS_id                                                                               
+CCR5_HUMAN_Gill_2023                       0.87       1.85    1.23  1.04         0.22
+GRB2_HUMAN_Faure_2021                      1.10       3.56    3.85  3.73         1.28
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR    1.02       3.51    3.47  3.43         0.31
+Q53Z42_HUMAN_McShan_2019_expression        0.90       4.93    4.80  4.98         0.86
+RASK_HUMAN_Weng_2022_abundance             0.89       1.45    1.70  1.76         1.37
+RASK_HUMAN_Weng_2022_binding-DARPin_K55    1.03       1.89    1.59  1.37         0.78
+SPA_STAAU_Tsuboyama_2023_1LP1              1.03       2.86    4.33  4.39         1.18
+SPG1_STRSG_Olson_2014                      0.85       1.61    2.62  2.60         0.78
+
+=== Top-5% enrichment at 192 labels (1.0 = random; mean of 20 seeds) ===
+strategy                                 random  zs_greedy  greedy   ucb  uncertainty
+DMS_id                                                                               
+CCR5_HUMAN_Gill_2023                       0.84       1.75    2.03  1.54         0.30
+GRB2_HUMAN_Faure_2021                      0.99       2.49    3.18  3.28         1.32
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR    1.07       2.33    3.52  3.55         0.56
+Q53Z42_HUMAN_McShan_2019_expression        1.00       3.56    4.94  4.93         0.94
+RASK_HUMAN_Weng_2022_abundance             0.95       1.13    1.72  2.44         1.16
+RASK_HUMAN_Weng_2022_binding-DARPin_K55    0.95       1.36    2.13  1.91         0.90
+SPA_STAAU_Tsuboyama_2023_1LP1              1.04       1.96    3.99  3.99         1.13
+SPG1_STRSG_Olson_2014                      0.98       1.32    2.45  2.47         0.66
+
+=== Enrichment, average over all 8 assays ===
+strategy  random  zs_greedy  greedy   ucb  uncertainty
+n_labels                                              
+24          1.01       1.01    1.01  1.01         1.01
+48          0.98       2.71    2.05  1.89         0.81
+72          0.95       2.59    2.66  2.61         0.88
+96          0.96       2.71    2.95  2.91         0.85
+120         0.95       2.48    3.05  2.99         0.86
+144         0.94       2.22    3.08  3.05         0.85
+168         0.96       2.08    3.07  3.07         0.88
+192         0.98       1.99    3.00  3.01         0.87
+
+=== Enrichment by prior strength (exploratory grouping) ===
+strategy               random  zs_greedy  greedy   ucb  uncertainty
+group        n_labels                                              
+prior_strong 24          1.11       1.11    1.11  1.11         1.11
+             48          1.03       3.58    2.43  2.31         0.91
+             72          1.02       3.31    3.16  3.13         0.99
+             96          1.01       3.46    3.41  3.36         0.97
+             120         0.96       3.18    3.50  3.36         1.03
+             144         0.93       2.79    3.49  3.42         1.02
+             168         0.97       2.60    3.47  3.41         1.04
+             192         0.98       2.47    3.42  3.37         1.05
+prior_weak   24          0.95       0.95    0.95  0.95         0.95
+             48          0.94       2.19    1.82  1.64         0.75
+             72          0.92       2.17    2.36  2.30         0.82
+             96          0.93       2.26    2.67  2.64         0.77
+             120         0.95       2.06    2.78  2.77         0.76
+             144         0.94       1.88    2.83  2.82         0.75
+             168         0.96       1.77    2.82  2.86         0.78
+             192         0.98       1.70    2.74  2.80         0.76
+
+=== Best percentile found, average over assays ===
+strategy  random  zs_greedy  greedy    ucb  uncertainty
+n_labels                                               
+24         0.963      0.963   0.963  0.963        0.963
+48         0.981      0.989   0.985  0.985        0.973
+72         0.987      0.994   0.992  0.992        0.978
+96         0.991      0.996   0.994  0.994        0.981
+120        0.992      0.997   0.995  0.995        0.986
+144        0.994      0.997   0.996  0.996        0.990
+168        0.995      0.997   0.996  0.996        0.992
+192        0.996      0.997   0.997  0.997        0.993
+
+=== Paired comparison vs random at 192 labels (per assay x seed) ===
+zs_greedy    mean extra hits  +9.72   win-rate 0.94 (ties count half)
+greedy       mean extra hits +19.49   win-rate 0.96 (ties count half)
+ucb          mean extra hits +19.65   win-rate 0.96 (ties count half)
+uncertainty  mean extra hits  -1.04   win-rate 0.42 (ties count half)
+
+Saved: data/selected/active_results.csv, active_per_assay.png

@@ -1,0 +1,194 @@
+====================================================================== 
+PART A: per-assay results
+ ======================================================================
+
+--- position_heldout, N=24 (mean Spearman over 20 seeds) ---
+model                                    zero_shot  additive_onehot  ridge_pos  ridge_pos+zs  gain_vs_zs               type
+DMS_id                                                                                                                     
+CCR5_HUMAN_Gill_2023                         0.346            0.030      0.176         0.278      -0.068            Binding
+GRB2_HUMAN_Faure_2021                        0.715            0.149      0.418         0.718       0.003  OrganismalFitness
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR      0.316            0.122      0.247         0.323       0.007            Binding
+Q53Z42_HUMAN_McShan_2019_expression          0.554            0.058      0.219         0.553      -0.001         Expression
+RASK_HUMAN_Weng_2022_abundance               0.195            0.061      0.206         0.219       0.024         Expression
+RASK_HUMAN_Weng_2022_binding-DARPin_K55      0.564            0.054      0.383         0.562      -0.002            Binding
+SPA_STAAU_Tsuboyama_2023_1LP1                0.280            0.247      0.310         0.365       0.086          Stability
+SPG1_STRSG_Olson_2014                        0.275            0.124      0.362         0.374       0.099            Binding
+
+--- position_heldout, N=192 (mean Spearman over 20 seeds) ---
+model                                    zero_shot  additive_onehot  ridge_pos  ridge_pos+zs  gain_vs_zs               type
+DMS_id                                                                                                                     
+CCR5_HUMAN_Gill_2023                         0.346            0.074      0.312         0.371       0.025            Binding
+GRB2_HUMAN_Faure_2021                        0.715            0.261      0.461         0.721       0.006  OrganismalFitness
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR      0.316            0.292      0.469         0.503       0.188            Binding
+Q53Z42_HUMAN_McShan_2019_expression          0.554            0.205      0.404         0.575       0.021         Expression
+RASK_HUMAN_Weng_2022_abundance               0.195            0.111      0.382         0.433       0.238         Expression
+RASK_HUMAN_Weng_2022_binding-DARPin_K55      0.564            0.125      0.517         0.592       0.027            Binding
+SPA_STAAU_Tsuboyama_2023_1LP1                0.280            0.365      0.496         0.531       0.251          Stability
+SPG1_STRSG_Olson_2014                        0.275            0.233      0.445         0.476       0.201            Binding
+
+--- random, N=24 (mean Spearman over 20 seeds) ---
+model                                    zero_shot  additive_onehot  ridge_pos  ridge_pos+zs  gain_vs_zs               type
+DMS_id                                                                                                                     
+CCR5_HUMAN_Gill_2023                         0.345            0.044      0.160         0.305      -0.041            Binding
+GRB2_HUMAN_Faure_2021                        0.735            0.289      0.478         0.762       0.027  OrganismalFitness
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR      0.324            0.163      0.313         0.378       0.055            Binding
+Q53Z42_HUMAN_McShan_2019_expression          0.561            0.111      0.294         0.558      -0.003         Expression
+RASK_HUMAN_Weng_2022_abundance               0.195            0.068      0.246         0.255       0.061         Expression
+RASK_HUMAN_Weng_2022_binding-DARPin_K55      0.550            0.095      0.381         0.550      -0.000            Binding
+SPA_STAAU_Tsuboyama_2023_1LP1                0.302            0.350      0.424         0.404       0.102          Stability
+SPG1_STRSG_Olson_2014                        0.293            0.347      0.510         0.497       0.205            Binding
+
+--- random, N=192 (mean Spearman over 20 seeds) ---
+model                                    zero_shot  additive_onehot  ridge_pos  ridge_pos+zs  gain_vs_zs               type
+DMS_id                                                                                                                     
+CCR5_HUMAN_Gill_2023                         0.345            0.136      0.337         0.381       0.035            Binding
+GRB2_HUMAN_Faure_2021                        0.735            0.692      0.779         0.852       0.117  OrganismalFitness
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR      0.324            0.481      0.580         0.610       0.286            Binding
+Q53Z42_HUMAN_McShan_2019_expression          0.561            0.366      0.497         0.621       0.060         Expression
+RASK_HUMAN_Weng_2022_abundance               0.195            0.314      0.494         0.530       0.336         Expression
+RASK_HUMAN_Weng_2022_binding-DARPin_K55      0.550            0.420      0.598         0.660       0.109            Binding
+SPA_STAAU_Tsuboyama_2023_1LP1                0.302            0.776      0.804         0.811       0.509          Stability
+SPG1_STRSG_Olson_2014                        0.293            0.781      0.796         0.786       0.493            Binding
+
+--- Fraction of runs where ridge_pos+zs beats zero-shot ---
+n                  24    48    96    192
+split                                   
+position_heldout  0.76  0.82  0.86  0.88
+random            0.84  0.96  0.99  1.00
+
+--- Same, per assay, N=24 ---
+split                                    position_heldout  random
+DMS_id                                                           
+CCR5_HUMAN_Gill_2023                                 0.65    0.60
+GRB2_HUMAN_Faure_2021                                0.65    0.95
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR              0.90    0.95
+Q53Z42_HUMAN_McShan_2019_expression                  0.70    0.75
+RASK_HUMAN_Weng_2022_abundance                       0.75    0.90
+RASK_HUMAN_Weng_2022_binding-DARPin_K55              0.70    0.65
+SPA_STAAU_Tsuboyama_2023_1LP1                        0.95    0.90
+SPG1_STRSG_Olson_2014                                0.80    1.00
+
+--- Random minus held-out gap at N=192, per model ---
+split            position_heldout  random    gap
+model                                           
+additive_onehot             0.208   0.496  0.287
+ridge_mean                  0.419   0.561  0.143
+ridge_pos                   0.436   0.611  0.175
+ridge_pos+zs                0.525   0.656  0.131
+zero_shot                   0.406   0.413  0.007
+
+--- Top-10% overlap (fraction of true top 10% recovered), mean over assays ---
+model                 additive_onehot  ridge_mean  ridge_pos  ridge_pos+zs  zero_shot
+split            n                                                                   
+position_heldout 24             0.123       0.183      0.150         0.207      0.210
+                 48             0.141       0.205      0.174         0.218      0.210
+                 96             0.158       0.223      0.185         0.222      0.210
+                 192            0.166       0.241      0.202         0.232      0.210
+random           24             0.162       0.198      0.182         0.224      0.214
+                 48             0.186       0.229      0.220         0.245      0.214
+                 96             0.222       0.259      0.255         0.269      0.214
+                 192            0.273       0.299      0.308         0.312      0.214
+
+====================================================================== 
+PART B: error analysis (N=96, seeds 0-4)
+ ======================================================================
+
+Columns: signed = mean(pred rank - true rank), >0 means over-ranked.
+abs_model / abs_zs = mean absolute rank error (lower is better).
+model_minus_zs < 0 means the supervised model beats zero-shot in that group.
+
+--- position_heldout | by mt_class ---
+                  n  signed  abs_model  abs_zs  model_minus_zs
+mt_class                                                      
+to_Gly         2823  -0.005      0.220   0.240          -0.019
+to_Pro         2797  -0.033      0.230   0.256          -0.026
+to_acidic      5433  -0.024      0.225   0.247          -0.022
+to_aliphatic  16808   0.012      0.228   0.244          -0.017
+to_aromatic    8455  -0.027      0.242   0.259          -0.017
+to_basic       5488  -0.001      0.217   0.241          -0.025
+to_polar      13748   0.020      0.228   0.245          -0.017
+
+--- position_heldout | by dKD_bin ---
+                           n  signed  abs_model  abs_zs  model_minus_zs
+dKD_bin                                                                
+more_hydrophobic       10720   0.002      0.226   0.246          -0.020
+more_polar             11041   0.002      0.226   0.247          -0.021
+much_more_hydrophobic  10458   0.010      0.227   0.244          -0.017
+much_more_polar        11477  -0.040      0.234   0.248          -0.015
+similar                11856   0.026      0.229   0.250          -0.021
+
+--- position_heldout | by pos_sens ---
+                       n  signed  abs_model  abs_zs  model_minus_zs
+pos_sens                                                           
+Q1_most_sensitive  13918   0.071      0.205   0.224          -0.019
+Q2                 13221   0.023      0.233   0.250          -0.018
+Q3                 14100  -0.029      0.244   0.254          -0.010
+Q4_most_tolerant   14313  -0.062      0.232   0.260          -0.028
+
+--- position_heldout | by type ---
+                       n  signed  abs_model  abs_zs  model_minus_zs
+type                                                               
+Binding            34172    -0.0      0.237   0.251          -0.014
+Expression         16107     0.0      0.222   0.250          -0.027
+OrganismalFitness   2639     0.0      0.159   0.162          -0.003
+Stability           2634     0.0      0.221   0.262          -0.041
+
+--- random | by mt_class ---
+                  n  signed  abs_model  abs_zs  model_minus_zs
+mt_class                                                      
+to_Gly         5235  -0.012      0.213   0.240          -0.027
+to_Pro         5183  -0.021      0.228   0.253          -0.025
+to_acidic     10130  -0.033      0.218   0.249          -0.030
+to_aliphatic  31092   0.009      0.216   0.245          -0.028
+to_aromatic   15628  -0.024      0.227   0.257          -0.030
+to_basic      10091   0.010      0.209   0.242          -0.033
+to_polar      25406   0.019      0.216   0.246          -0.030
+
+--- random | by dKD_bin ---
+                           n  signed  abs_model  abs_zs  model_minus_zs
+dKD_bin                                                                
+more_hydrophobic       19623   0.004      0.215   0.245          -0.030
+more_polar             20656  -0.002      0.217   0.248          -0.030
+much_more_hydrophobic  19292   0.012      0.215   0.244          -0.029
+much_more_polar        21343  -0.035      0.220   0.249          -0.029
+similar                21851   0.022      0.221   0.249          -0.028
+
+--- random | by pos_sens ---
+                       n  signed  abs_model  abs_zs  model_minus_zs
+pos_sens                                                           
+Q1_most_sensitive  25763   0.042      0.187   0.221          -0.034
+Q2                 25616   0.019      0.229   0.255          -0.026
+Q3                 25478  -0.018      0.235   0.253          -0.017
+Q4_most_tolerant   25908  -0.042      0.220   0.260          -0.040
+
+--- random | by type ---
+                       n  signed  abs_model  abs_zs  model_minus_zs
+type                                                               
+Binding            64210    -0.0      0.226   0.251          -0.024
+Expression         30130    -0.0      0.221   0.249          -0.029
+OrganismalFitness   4210     0.0      0.127   0.160          -0.033
+Stability           4215     0.0      0.157   0.263          -0.105
+
+--- Most UNDER-ranked (assay x mutant class), held-out ---
+                                 DMS_id    mt_class    n  signed
+                   CCR5_HUMAN_Gill_2023      to_Pro  782  -0.089
+                  SPG1_STRSG_Olson_2014 to_aromatic  404  -0.063
+          SPA_STAAU_Tsuboyama_2023_1LP1    to_basic  255  -0.059
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR      to_Pro  413  -0.051
+                   CCR5_HUMAN_Gill_2023   to_acidic 1582  -0.049
+          SPA_STAAU_Tsuboyama_2023_1LP1      to_Gly  135  -0.043
+         RASK_HUMAN_Weng_2022_abundance   to_acidic  730  -0.041
+RASK_HUMAN_Weng_2022_binding-DARPin_K55   to_acidic  736  -0.036
+
+--- Most OVER-ranked (assay x mutant class), held-out ---
+                                 DMS_id     mt_class    n  signed
+RASK_HUMAN_Weng_2022_binding-DARPin_K55     to_basic  765   0.027
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR     to_polar 2091   0.029
+    Q53Z42_HUMAN_McShan_2019_expression       to_Gly  413   0.040
+                  SPG1_STRSG_Olson_2014     to_basic  263   0.041
+          SPA_STAAU_Tsuboyama_2023_1LP1 to_aliphatic  784   0.043
+         RASK_HUMAN_Weng_2022_abundance     to_polar 1860   0.045
+                   CCR5_HUMAN_Gill_2023 to_aliphatic 4547   0.048
+                  SPG1_STRSG_Olson_2014    to_acidic  254   0.067
+
+Saved: data/selected/error_analysis_preds.csv
