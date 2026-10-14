@@ -1,0 +1,86 @@
+done: SPG1_STRSG_Olson_2014
+done: RASK_HUMAN_Weng_2022_binding-DARPin_K55
+done: RASK_HUMAN_Weng_2022_abundance
+done: Q53Z42_HUMAN_McShan_2019_binding-TAPBPR
+done: Q53Z42_HUMAN_McShan_2019_expression
+done: CCR5_HUMAN_Gill_2023
+done: GRB2_HUMAN_Faure_2021
+done: SPA_STAAU_Tsuboyama_2023_1LP1
+
+=== Enrichment, average over 8 assays (SANITY: random~0.98, zs_greedy~1.99, greedy~3.00 at 192) ===
+strategy  random  zs_greedy  greedy  ucb0.5  ucb1  ucb2  hybrid1  hybrid2  seeded_greedy
+n_labels                                                                                
+48          0.98       2.71    2.05    2.00  1.89  1.75     2.71     2.71           3.51
+72          0.95       2.59    2.66    2.67  2.61  2.49     3.13     2.59           3.63
+96          0.96       2.71    2.95    2.93  2.91  2.76     3.21     2.90           3.56
+144         0.94       2.22    3.08    3.10  3.05  2.89     3.19     3.00           3.46
+192         0.98       1.99    3.00    3.06  3.01  2.93     3.00     2.91           3.19
+
+=== By prior-strength group (exploratory grouping) ===
+strategy               random  zs_greedy  greedy  ucb0.5  ucb1  ucb2  hybrid1  hybrid2  seeded_greedy
+group        n_labels                                                                                
+prior_strong 48          1.03       3.58    2.43    2.37  2.31  2.31     3.58     3.58           3.99
+             96          1.01       3.46    3.41    3.49  3.36  3.36     3.63     3.58           3.92
+             192         0.98       2.47    3.42    3.50  3.37  3.36     3.43     3.47           3.51
+prior_weak   48          0.94       2.19    1.82    1.78  1.64  1.41     2.19     2.19           3.22
+             96          0.93       2.26    2.67    2.60  2.64  2.41     2.96     2.49           3.34
+             192         0.98       1.70    2.74    2.80  2.80  2.67     2.75     2.58           3.00
+
+=== Campaign-average enrichment (mean over 48..192 labels), average over assays ===
+strategy
+random           0.96
+zs_greedy        2.40
+greedy           2.84
+ucb0.5           2.84
+ucb1             2.79
+ucb2             2.66
+hybrid1          3.08
+hybrid2          2.87
+seeded_greedy    3.46
+
+=== Paired difference vs greedy, per assay (mean +/- SE over 20 seeds) ===
+Verdict counts: better / worse = difference beyond 2 SE; same = within 2 SE.
+
+--- at 96 labels ---
+                                             random   zs_greedy      ucb0.5        ucb1        ucb2     hybrid1     hybrid2 seeded_greedy
+DMS_id                                                                                                                                   
+CCR5_HUMAN_Gill_2023                     -0.35±0.14  +0.62±0.13  -0.26±0.11  -0.19±0.11  -0.41±0.12  -0.18±0.12  -0.04±0.15    +0.09±0.23
+GRB2_HUMAN_Faure_2021                    -2.75±0.18  -0.29±0.15  +0.03±0.08  -0.12±0.10  -0.06±0.09  +0.28±0.14  +0.08±0.12    +0.22±0.14
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR  -2.46±0.20  +0.04±0.15  -0.12±0.12  -0.04±0.11  -0.01±0.14  +0.80±0.17  +0.62±0.18    +0.96±0.19
+Q53Z42_HUMAN_McShan_2019_expression      -3.90±0.16  +0.13±0.11  +0.02±0.08  +0.18±0.08  +0.08±0.11  +0.40±0.13  +0.50±0.12    +0.91±0.20
+RASK_HUMAN_Weng_2022_abundance           -0.81±0.21  -0.25±0.20  +0.10±0.10  +0.06±0.14  -0.09±0.17  +0.27±0.19  -0.57±0.16    +0.47±0.20
+RASK_HUMAN_Weng_2022_binding-DARPin_K55  -0.56±0.22  +0.30±0.21  +0.17±0.13  -0.22±0.19  -0.19±0.19  -0.04±0.24  -0.07±0.23    +0.39±0.26
+SPA_STAAU_Tsuboyama_2023_1LP1            -3.31±0.27  -1.47±0.27  -0.07±0.10  +0.05±0.12  -0.24±0.17  +0.66±0.26  -0.03±0.29    +1.39±0.27
+SPG1_STRSG_Olson_2014                    -1.77±0.15  -1.01±0.16  -0.01±0.10  -0.02±0.11  -0.56±0.14  -0.09±0.18  -0.86±0.17    +0.45±0.24
+     strategy  mean_diff_over_assays  better  same  worse
+       random                 -1.988       0     0      8
+    zs_greedy                 -0.239       1     5      2
+       ucb0.5                 -0.018       0     7      1
+         ucb1                 -0.038       1     7      0
+         ucb2                 -0.185       0     6      2
+      hybrid1                  0.263       4     4      0
+      hybrid2                 -0.047       2     4      2
+seeded_greedy                  0.611       4     4      0
+
+--- at 192 labels ---
+                                             random   zs_greedy      ucb0.5        ucb1        ucb2     hybrid1     hybrid2 seeded_greedy
+DMS_id                                                                                                                                   
+CCR5_HUMAN_Gill_2023                     -1.19±0.28  -0.28±0.26  -0.36±0.16  -0.49±0.15  -0.73±0.25  -0.51±0.20  -0.42±0.23    -0.23±0.23
+GRB2_HUMAN_Faure_2021                    -2.19±0.10  -0.70±0.09  +0.09±0.06  +0.09±0.06  +0.09±0.07  +0.16±0.09  +0.18±0.08    +0.15±0.06
+Q53Z42_HUMAN_McShan_2019_binding-TAPBPR  -2.45±0.14  -1.19±0.11  +0.08±0.09  +0.03±0.07  -0.01±0.10  +0.29±0.09  +0.22±0.11    +0.22±0.15
+Q53Z42_HUMAN_McShan_2019_expression      -3.94±0.10  -1.38±0.09  +0.08±0.06  -0.01±0.08  -0.03±0.10  +0.11±0.08  +0.09±0.08    +0.23±0.10
+RASK_HUMAN_Weng_2022_abundance           -0.77±0.17  -0.59±0.16  +0.52±0.18  +0.72±0.18  +0.53±0.22  +0.34±0.18  -0.45±0.19    +0.77±0.24
+RASK_HUMAN_Weng_2022_binding-DARPin_K55  -1.19±0.17  -0.78±0.16  +0.05±0.14  -0.23±0.16  -0.23±0.17  -0.24±0.15  -0.13±0.13    -0.10±0.18
+SPA_STAAU_Tsuboyama_2023_1LP1            -2.95±0.13  -2.03±0.10  -0.00±0.03  +0.01±0.07  +0.05±0.09  -0.24±0.10  -0.22±0.09    +0.04±0.11
+SPG1_STRSG_Olson_2014                    -1.47±0.18  -1.13±0.17  +0.05±0.11  +0.02±0.11  -0.21±0.15  +0.16±0.18  +0.04±0.14    +0.46±0.23
+     strategy  mean_diff_over_assays  better  same  worse
+       random                 -2.019       0     0      8
+    zs_greedy                 -1.011       0     1      7
+       ucb0.5                  0.065       1     6      1
+         ucb1                  0.017       1     6      1
+         ucb2                 -0.066       1     6      1
+      hybrid1                  0.009       1     5      2
+      hybrid2                 -0.085       1     5      2
+seeded_greedy                  0.193       3     5      0
+
+Saved: data/selected/active_hybrid_results.csv, active_hybrid.png

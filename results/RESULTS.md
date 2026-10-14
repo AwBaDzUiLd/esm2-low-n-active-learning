@@ -86,3 +86,63 @@ Average over assays. All strategies share the same random first 24 labels.
 | GRB2_HUMAN_Faure_2021                   |   1034.000 |      1.000 |           0.735 |             0.784 |       0.010 |
 | SPA_STAAU_Tsuboyama_2023_1LP1           |   1035.000 |      1.000 |           0.294 |             0.844 |       0.011 |
 
+## Hybrid strategies and beta sweep
+
+|   n_labels |   greedy |   hybrid1 |   hybrid2 |   random |   seeded_greedy |   ucb0.5 |   ucb1 |   ucb2 |   zs_greedy |
+|-----------:|---------:|----------:|----------:|---------:|----------------:|---------:|-------:|-------:|------------:|
+|         48 |     2.05 |      2.71 |      2.71 |     0.98 |            3.51 |     2.00 |   1.89 |   1.75 |        2.71 |
+|         96 |     2.95 |      3.21 |      2.90 |     0.96 |            3.56 |     2.93 |   2.91 |   2.76 |        2.71 |
+|        192 |     3.00 |      3.00 |      2.91 |     0.98 |            3.19 |     3.06 |   3.01 |   2.93 |        1.99 |
+
+Campaign-average enrichment (48-192 labels):
+
+| strategy      |   enrichment |
+|:--------------|-------------:|
+| greedy        |         2.84 |
+| hybrid1       |         3.08 |
+| hybrid2       |         2.87 |
+| random        |         0.96 |
+| seeded_greedy |         3.46 |
+| ucb0.5        |         2.84 |
+| ucb1          |         2.79 |
+| ucb2          |         2.66 |
+| zs_greedy     |         2.40 |
+## Singles -> doubles transfer (Spearman on doubles; label -1 = all singles)
+
+Average over 5 assays:
+
+|   label |   zero_shot |   ridge_direct |   ridge_additive |   additive_measured |
+|--------:|------------:|---------------:|-----------------:|--------------------:|
+|      -1 |       0.326 |          0.719 |            0.773 |               0.845 |
+|      24 |       0.326 |          0.394 |            0.412 |               0.845 |
+|      96 |       0.326 |          0.534 |            0.571 |               0.845 |
+|     192 |       0.326 |          0.596 |            0.634 |               0.845 |
+
+Average excluding SPA:
+
+|   label |   zero_shot |   ridge_direct |   ridge_additive |   additive_measured |
+|--------:|------------:|---------------:|-----------------:|--------------------:|
+|      -1 |       0.465 |          0.816 |            0.845 |               0.904 |
+|      24 |       0.465 |          0.512 |            0.511 |               0.904 |
+|      96 |       0.465 |          0.622 |            0.633 |               0.904 |
+|     192 |       0.465 |          0.676 |            0.691 |               0.904 |
+
+## Active learning on mixed pools (singles + 4,000 sampled doubles; 4 assays)
+
+|   n_labels |   random |   zs_greedy |   greedy |   ucb1 |   hybrid1 |   seeded_greedy |
+|-----------:|---------:|------------:|---------:|-------:|----------:|----------------:|
+|         48 |     0.96 |        2.44 |     1.81 |   1.74 |      2.44 |            2.44 |
+|         96 |     0.96 |        2.47 |     2.72 |   2.53 |      2.87 |            3.16 |
+|        144 |     0.99 |        2.20 |     3.05 |   2.83 |      3.11 |            3.31 |
+|        192 |     1.01 |        2.01 |     3.23 |   3.09 |      3.33 |            3.50 |
+
+Campaign-average enrichment (48-192 labels):
+
+| strategy      |   enrichment |
+|:--------------|-------------:|
+| random        |         0.98 |
+| zs_greedy     |         2.28 |
+| greedy        |         2.74 |
+| ucb1          |         2.61 |
+| hybrid1       |         2.96 |
+| seeded_greedy |         3.15 |

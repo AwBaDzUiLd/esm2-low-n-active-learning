@@ -13,9 +13,28 @@ run entirely on a 6 GB laptop GPU.
 3. **Random splits overstate performance.** For ridge_pos+zs at N=192: 0.656 (random)
    vs 0.525 (held-out positions). Position-specific baselines lose far more.
 4. **Active learning (pool-based, 192 labels):** model-guided greedy/UCB reach ~3.0x
-   top-5% enrichment vs ~1.0 for random, and win in 96% of assay x seed campaigns.
-   Zero-shot greedy leads until ~48-72 labels, then falls behind. Uncertainty-only
-   sampling is worse than random (0.87x).
+   top-5% enrichment vs ~1.0 for random, winning in 96% of assay x seed campaigns.
+   Zero-shot greedy leads until ~48-72 labels, then falls behind. Uncertainty-only sampling
+   does not help: below random on average (0.87x), clearly worse in 3 of 8 assays,
+   about equal in 3, slightly better in 2 (GRB2, RASK abundance).
+5. **Using the prior only for the first batch speeds up the campaign.** Choosing round 1 by
+   zero-shot score (`hybrid1`), or half of the initial 24 labels (`seeded_greedy`), raised
+   campaign-average enrichment (48-192 labels) from 2.84 (greedy) to 3.08 and 3.46.
+   At 96 labels `hybrid1` beat greedy in 4 of 8 assays and was worse in none; by 192 labels
+   the difference was gone. Two prior-first rounds (`hybrid2`) gave no gain, and the UCB
+   weight (0.5-2) made little difference. These strategies were designed after seeing
+   the same 8 assays and need replication on new ones.
+6. **Models trained on single mutants transfer to double mutants.** Excluding SPA, Spearman on
+   doubles at N=192 labeled singles is 0.68 (direct) and 0.69 (summing per-single predictions)
+   vs 0.47 for zero-shot; at N=24 the gain is small (0.51 vs 0.47). Summing measured
+   single-mutant scores (a reference using all singles) reaches 0.90. Top-10% overlap is weaker:
+   0.41 at N=192 vs 0.30 for zero-shot. In SPA, zero-shot is negatively correlated with doubles
+   (-0.23); the cause is not established. Some test doubles contain a training single.
+7. **Active learning on mixed pools (singles + 4,000 sampled doubles, 4 assays).** Guided
+   strategies reach 3.1-3.5x top-5% enrichment at 192 labels vs 1.0 for random. `hybrid1` and
+   `seeded_greedy` again were never worse than greedy beyond noise (campaign average 2.96 and
+   3.15 vs 2.74), but most per-assay differences are within noise. Guided picks were mostly
+   singles (5-21% doubles) even though random picks were 57-80% doubles.
 
 ## Reproduce
 ```bash
@@ -42,6 +61,14 @@ Outputs go to `data/selected/` and `results/` (tables in `results/RESULTS.md`).
   and should be checked against the original papers.
 - SPG1 is supplied as a long sequence with a short mutated domain; zero-shot may be
   affected by this (untested).
+- Nine strategy configurations were compared on the same 8 assays, and ~128 paired
+  comparisons were made at a 2-SE threshold, so best-of-nine results are optimistic
+  and isolated per-assay differences may be chance.
+- Mixed-pool experiments use sampled doubles, and the top-5% target is defined within the pool,
+  not the full assay. They reuse 4 of the 8 development assays, so they test robustness to
+  pool composition, not independent replication.
+- In the transfer experiment, some test doubles contain a single that was in the training set,
+  which makes transfer look easier than for a fully new double.
 
 ## Credits
 ProteinGym (Notin et al., 2023), ESM-2 (Lin et al., 2023), and the original DMS

@@ -45,6 +45,8 @@ for s in STRATS[1:]:
     out[s] = d.apply(lambda r: f"{r['mean']:+.2f} ± {r['std'] / np.sqrt(r['count']):.2f}", axis=1)
 t4 = pd.DataFrame(out)
 
+
+
 # ---- Write markdown + CSVs
 with open("results/RESULTS.md", "w") as fh:
     def sec(title, df, note="", fmt=".3f"):
@@ -88,3 +90,36 @@ print("=== Per-assay held-out table ===")
 print(t2.round(3).to_string())
 print("\n=== Enrichment difference vs random at 192 labels (mean ± SE) ===")
 print(t4.to_string())
+
+hyb = pd.read_csv(f"{D}/active_hybrid_results.csv")
+ph = hyb.groupby(["DMS_id", "strategy", "n_labels"])["enrichment"].mean().reset_index()
+H = ph.pivot_table(index="n_labels", columns="strategy", values="enrichment").loc[[48, 96, 192]]
+camp = (hyb[hyb.n_labels >= 48].groupby(["DMS_id", "strategy", "seed"])["enrichment"]
+        .mean().groupby("strategy").mean())
+with open("results/RESULTS.md", "a") as fh:
+    fh.write("## Hybrid strategies and beta sweep\n\n" + H.to_markdown(floatfmt=".2f") + "\n\n")
+    fh.write("Campaign-average enrichment (48-192 labels):\n\n"
+             + camp.to_frame("enrichment").to_markdown(floatfmt=".2f") + "\n")
+
+MOD = ["zero_shot", "ridge_direct", "ridge_additive", "additive_measured"]
+N12 = ["random", "zs_greedy", "greedy", "ucb1", "hybrid1", "seeded_greedy"]
+tr12 = pd.read_csv(f"{D}/step12_transfer_results.csv")
+tr12["label"] = tr12["n"].where(tr12["n"].isin([24, 96, 192]), -1)
+per_assay = tr12.groupby(["DMS_id", "label", "model"])["rho"].mean()
+T_all = per_assay.groupby(level=["label", "model"]).mean().unstack("model")[MOD]
+T_noSPA = (per_assay[~per_assay.index.get_level_values("DMS_id").str.startswith("SPA")]
+           .groupby(level=["label", "model"]).mean().unstack("model")[MOD])
+ac12 = pd.read_csv(f"{D}/step12_active_results.csv")
+A12 = (ac12.groupby(["DMS_id", "strategy", "n_labels"])["enrichment"].mean()
+       .groupby(level=["strategy", "n_labels"]).mean().unstack("strategy")[N12].loc[[48, 96, 144, 192]])
+camp12 = (ac12[ac12.n_labels >= 48].groupby(["DMS_id", "strategy", "seed"])["enrichment"]
+          .mean().groupby("strategy").mean()[N12])
+with open("results/RESULTS.md", "a") as fh:
+    fh.write("## Singles -> doubles transfer (Spearman on doubles; label -1 = all singles)\n\n")
+    fh.write("Average over 5 assays:\n\n" + T_all.to_markdown(floatfmt=".3f") + "\n\n")
+    fh.write("Average excluding SPA:\n\n" + T_noSPA.to_markdown(floatfmt=".3f") + "\n\n")
+    fh.write("## Active learning on mixed pools (singles + 4,000 sampled doubles; 4 assays)\n\n")
+    fh.write(A12.to_markdown(floatfmt=".2f") + "\n\nCampaign-average enrichment (48-192 labels):\n\n"
+             + camp12.to_frame("enrichment").to_markdown(floatfmt=".2f") + "\n")
+for fn in ["step12_transfer_results.csv", "step12_active_results.csv"]:
+    shutil.copy(f"{D}/{fn}", f"results/{fn}")

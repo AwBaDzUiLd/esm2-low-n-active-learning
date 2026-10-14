@@ -1,0 +1,29 @@
+saved pool: SPG1_STRSG_Olson_2014 (1045 singles + 4000 multi)
+saved pool: RASK_HUMAN_Weng_2022_binding-DARPin_K55 (3084 singles + 4000 multi)
+saved pool: RASK_HUMAN_Weng_2022_abundance (3066 singles + 4000 multi)
+saved pool: GRB2_HUMAN_Faure_2021 (1034 singles + 4000 multi)
+saved pool: SPA_STAAU_Tsuboyama_2023_1LP1 (1035 singles + 1070 multi)
+
+=== Pool diagnostics ===
+DMS_id                       SPG1_STRSG_Olson_2014  RASK_HUMAN_Weng_2022_binding-DARPin_K55  RASK_HUMAN_Weng_2022_abundance  GRB2_HUMAN_Faure_2021  SPA_STAAU_Tsuboyama_2023_1LP1
+n_singles                                 1045.000                                 3084.000                        3066.000               1034.000                       1035.000
+n_multi_total                           535917.000                                21789.000                       22946.000              62332.000                       1070.000
+n_multi_pool                              4000.000                                 4000.000                        4000.000               4000.000                       1070.000
+zs_check_maxdiff                             0.000                                    0.000                           0.000                  0.000                          0.000
+mean_score_singles                          -0.656                                   -0.237                          -0.332                 -0.428                         -0.470
+mean_score_multi                            -1.818                                   -0.540                          -0.517                 -0.803                         -1.169
+rho_zs_singles                               0.295                                    0.552                           0.193                  0.735                          0.294
+rho_zs_multi                                 0.330                                    0.615                           0.279                  0.628                         -0.231
+frac_multi_with_all_singles                  1.000                                    0.962                           0.965                  0.998                          1.000
+rho_additive_measured                        0.960                                    0.950                           0.854                  0.853                          0.608
+top5_frac_multi                              0.810                                    0.420                           0.517                  0.758                          0.009
+
+Mutations per multi-variant (count of variants in the full assay):
+DMS_id
+SPG1_STRSG_Olson_2014                      {'2': 535917}
+RASK_HUMAN_Weng_2022_binding-DARPin_K55     {'2': 21789}
+RASK_HUMAN_Weng_2022_abundance              {'2': 22946}
+GRB2_HUMAN_Faure_2021                       {'2': 62332}
+SPA_STAAU_Tsuboyama_2023_1LP1                {'2': 1070}
+
+Peak VRAM (GB): 2.8

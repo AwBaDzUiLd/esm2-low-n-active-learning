@@ -8,4 +8,8 @@ python embed.py
 python lowN.py
 python analysis.py | tee analysis_out.txt
 python active.py | tee active_out.txt
+python active_hybrid.py | tee active_hybrid_out.txt
+python build_pools.py | tee build_pools_out.txt
+python step12_transfer.py | tee step12_transfer_out.txt
+python step12_active.py | tee step12_active_out.txt
 python make_report.py
