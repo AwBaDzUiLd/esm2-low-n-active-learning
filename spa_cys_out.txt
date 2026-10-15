@@ -1,0 +1,16 @@
+=== SINGLES ===
+to Cys      n=  51  rho_zs=+0.247  mean score=+0.06  mean zs=-6.39
+not to Cys  n= 984  rho_zs=+0.359  mean score=-0.50  mean zs=-4.19
+
+=== DOUBLES ===
+doubles with a Cys substitution: 111 of 1070
+with Cys    n= 111  rho_zs=-0.402  mean score=-0.60  mean zs=-10.60
+without Cys n= 959  rho_zs=-0.090  mean score=-1.23  mean zs=-8.18
+
+D34C doubles: 19, mean score -0.00, others -1.19
+rho_zs excluding D34C doubles: -0.196
+rho_zs excluding all Cys doubles: -0.09
+
+share of top-54 doubles with Cys:  0.52
+share of top-54 doubles with D34C: 0.3
+share of ALL doubles with Cys:     0.1

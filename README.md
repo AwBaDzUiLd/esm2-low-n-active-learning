@@ -14,9 +14,8 @@ run entirely on a 6 GB laptop GPU.
    vs 0.525 (held-out positions). Position-specific baselines lose far more.
 4. **Active learning (pool-based, 192 labels):** model-guided greedy/UCB reach ~3.0x
    top-5% enrichment vs ~1.0 for random, winning in 96% of assay x seed campaigns.
-   Zero-shot greedy leads until ~48-72 labels, then falls behind. Uncertainty-only sampling
-   does not help: below random on average (0.87x), clearly worse in 3 of 8 assays,
-   about equal in 3, slightly better in 2 (GRB2, RASK abundance).
+   Zero-shot greedy leads early and then falls behind; the crossover came by ~48-72 labels on the
+   development assays and ~96-144 on the hold-out, whose zero-shot prior was stronger on average.
 5. **Using the prior only for the first batch speeds up the campaign.** Choosing round 1 by
    zero-shot score (`hybrid1`), or half of the initial 24 labels (`seeded_greedy`), raised
    campaign-average enrichment (48-192 labels) from 2.84 (greedy) to 3.08 and 3.46.
@@ -41,7 +40,7 @@ run entirely on a 6 GB laptop GPU.
    hybrid1 gained +0.28 (better in 5 assays, worse in 0) and seeded_greedy +0.47 (better in 5,
    worse in 0), meeting the pre-specified criteria. The effects are modest (about 10-16% of greedy's
    enrichment), shrink by 192 labels (+0.05 and +0.18), and the hold-out contains no binder
-   assays (its one 'Binding' assay, CP2C9, is an enzyme with an activity readout).
+   assays (its one 'Binding' assay, CP2C9, is an enzyme with an activity readout)(criteria and assay list committed in 71e09a1, before any hold-out script or result was added to the repo).
 
 ## Reproduce
 ```bash
@@ -76,6 +75,9 @@ Outputs go to `data/selected/` and `results/` (tables in `results/RESULTS.md`).
   pool composition, not independent replication.
 - In the transfer experiment, some test doubles contain a single that was in the training set,
   which makes transfer look easier than for a fully new double.
+- The hold-out test used the same model and settings as development, and the success rule needed
+  only a positive mean difference and more assays better than worse (no minimum effect size).
+  The hold-out's mean zero-shot Spearman (0.54) was higher than the development set's (0.41).
 
 ## Credits
 ProteinGym (Notin et al., 2023), ESM-2 (Lin et al., 2023), and the original DMS
