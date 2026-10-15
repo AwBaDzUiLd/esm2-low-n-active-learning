@@ -123,3 +123,25 @@ with open("results/RESULTS.md", "a") as fh:
              + camp12.to_frame("enrichment").to_markdown(floatfmt=".2f") + "\n")
 for fn in ["step12_transfer_results.csv", "step12_active_results.csv"]:
     shutil.copy(f"{D}/{fn}", f"results/{fn}")
+
+HN = ["random", "zs_greedy", "greedy", "ucb1", "hybrid1", "seeded_greedy"]
+HO = pd.read_csv(f"{D}/holdout_active_results.csv")
+hper = HO.groupby(["DMS_id", "strategy", "n_labels"])["enrichment"].mean().reset_index()
+H_avg = (hper.groupby(["strategy", "n_labels"])["enrichment"].mean()
+         .unstack("strategy")[HN].loc[[48, 96, 144, 192]])
+hcamp = (HO[HO.n_labels >= 48].groupby(["DMS_id", "seed", "strategy"])["enrichment"]
+         .mean().unstack("strategy")[HN])
+H_camp = hcamp.groupby("DMS_id").mean()
+dd = {}
+for s in ["zs_greedy", "ucb1", "hybrid1", "seeded_greedy"]:
+    diff = (hcamp[s] - hcamp["greedy"]).groupby("DMS_id").agg(["mean", "std", "count"])
+    dd[s] = diff.apply(lambda r: f"{r['mean']:+.2f} ± {r['std'] / np.sqrt(r['count']):.2f}", axis=1)
+H_diff = pd.DataFrame(dd)
+with open("results/RESULTS.md", "a") as fh:
+    fh.write("## Pre-specified hold-out test on 8 new assays (see PLAN.md)\n\n")
+    fh.write("Enrichment averaged over assays:\n\n" + H_avg.to_markdown(floatfmt=".2f") + "\n\n")
+    fh.write("Campaign-average enrichment (48-192 labels) per assay:\n\n"
+             + H_camp.to_markdown(floatfmt=".2f") + "\n\n")
+    fh.write("Paired difference vs greedy in campaign-average enrichment (mean ± SE over 20 seeds):\n\n"
+             + H_diff.to_markdown() + "\n")
+shutil.copy(f"{D}/holdout_active_results.csv", "results/holdout_active_results.csv")

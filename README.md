@@ -35,6 +35,13 @@ run entirely on a 6 GB laptop GPU.
    `seeded_greedy` again were never worse than greedy beyond noise (campaign average 2.96 and
    3.15 vs 2.74), but most per-assay differences are within noise. Guided picks were mostly
    singles (5-21% doubles) even though random picks were 57-80% doubles.
+8. **Pre-specified test on 8 new assays** (chosen by a seeded rule; criteria committed in PLAN.md
+   before running; no tuning). Campaign-average top-5% enrichment (48-192 labels, averaged over
+   assays): random 0.98, greedy 2.98, hybrid1 3.26, seeded_greedy 3.45. Paired against greedy,
+   hybrid1 gained +0.28 (better in 5 assays, worse in 0) and seeded_greedy +0.47 (better in 5,
+   worse in 0), meeting the pre-specified criteria. The effects are modest (about 10-16% of greedy's
+   enrichment), shrink by 192 labels (+0.05 and +0.18), and the hold-out contains no binder
+   assays (its one 'Binding' assay, CP2C9, is an enzyme with an activity readout).
 
 ## Reproduce
 ```bash

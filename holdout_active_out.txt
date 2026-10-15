@@ -1,0 +1,69 @@
+done: CP2C9_HUMAN_Amorosi_2021_activity
+done: CASP3_HUMAN_Roychowdhury_2020
+done: OXDA_RHOTO_Vanella_2023_activity
+done: VKOR1_HUMAN_Chiasson_2020_abundance
+done: PTEN_HUMAN_Matreyek_2021
+done: EPHB2_HUMAN_Tsuboyama_2023_1F0M
+done: TRPC_THEMA_Chan_2017
+done: KKA2_KLEPN_Melnikov_2014
+
+=== Hold-out assays ===
+                             DMS_id  pool  top5_size  zero_shot_rho
+  CP2C9_HUMAN_Amorosi_2021_activity  6142        308          0.672
+      CASP3_HUMAN_Roychowdhury_2020  1567         79          0.633
+   OXDA_RHOTO_Vanella_2023_activity  6396        320          0.355
+VKOR1_HUMAN_Chiasson_2020_abundance  2695        135          0.503
+           PTEN_HUMAN_Matreyek_2021  5083        255          0.464
+    EPHB2_HUMAN_Tsuboyama_2023_1F0M  1239         62          0.680
+               TRPC_THEMA_Chan_2017  1519         76          0.459
+           KKA2_KLEPN_Melnikov_2014  4960        248          0.579
+
+=== Enrichment, average over assays (SANITY: random ~1.0) ===
+strategy  random  zs_greedy  greedy  ucb1  hybrid1  seeded_greedy
+n_labels                                                         
+48          0.99       3.18    2.15  2.13     3.18           3.26
+96          0.96       3.42    3.18  3.05     3.30           3.61
+144         0.98       3.14    3.22  3.21     3.34           3.49
+192         0.99       2.85    3.13  3.14     3.18           3.31
+
+=== Enrichment at 192 labels, per assay ===
+strategy                             random  zs_greedy  greedy  ucb1  hybrid1  seeded_greedy
+DMS_id                                                                                      
+CASP3_HUMAN_Roychowdhury_2020          1.06       0.96    2.60  2.84     2.42           2.73
+CP2C9_HUMAN_Amorosi_2021_activity      1.00       6.94    6.75  6.67     6.52           7.18
+EPHB2_HUMAN_Tsuboyama_2023_1F0M        0.95       3.07    2.92  2.97     3.10           3.11
+KKA2_KLEPN_Melnikov_2014               1.01       2.19    2.25  2.17     2.21           2.30
+OXDA_RHOTO_Vanella_2023_activity       1.02       1.87    2.24  2.14     2.49           2.52
+PTEN_HUMAN_Matreyek_2021               0.92       1.79    1.72  1.70     1.80           1.50
+TRPC_THEMA_Chan_2017                   1.01       3.62    3.80  3.98     3.79           3.97
+VKOR1_HUMAN_Chiasson_2020_abundance    0.90       2.39    2.78  2.66     3.11           3.17
+
+=== Campaign-average enrichment (48..192 labels), average over assays ===
+strategy
+random           0.98
+zs_greedy        3.19
+greedy           2.98
+ucb1             2.92
+hybrid1          3.26
+seeded_greedy    3.45
+
+=== Paired difference in campaign-average enrichment vs greedy (mean ± SE over 20 seeds) ===
+                                         random   zs_greedy        ucb1     hybrid1 seeded_greedy
+DMS_id                                                                                           
+CASP3_HUMAN_Roychowdhury_2020        -1.16±0.22  -0.93±0.20  -0.03±0.10  -0.34±0.17    +0.17±0.24
+CP2C9_HUMAN_Amorosi_2021_activity    -5.61±0.17  +1.95±0.18  -0.06±0.23  +0.47±0.18    +1.28±0.30
+EPHB2_HUMAN_Tsuboyama_2023_1F0M      -2.22±0.11  +0.63±0.11  +0.06±0.07  +0.64±0.09    +0.64±0.11
+KKA2_KLEPN_Melnikov_2014             -1.02±0.12  +0.10±0.09  -0.13±0.09  +0.05±0.09    +0.08±0.12
+OXDA_RHOTO_Vanella_2023_activity     -0.81±0.11  +0.01±0.12  -0.11±0.10  +0.36±0.12    +0.38±0.15
+PTEN_HUMAN_Matreyek_2021             -0.72±0.09  +0.52±0.06  -0.01±0.07  +0.53±0.07    +0.31±0.08
+TRPC_THEMA_Chan_2017                 -2.73±0.11  +0.07±0.11  +0.10±0.08  +0.40±0.11    +0.77±0.12
+VKOR1_HUMAN_Chiasson_2020_abundance  -1.74±0.19  -0.63±0.17  -0.25±0.10  +0.14±0.15    +0.17±0.19
+
+     strategy  mean_diff  better  same  worse          verdict
+       random     -2.001       0     0      8 (reference only)
+    zs_greedy      0.216       3     3      2 (reference only)
+         ucb1     -0.054       0     7      1 (reference only)
+      hybrid1      0.281       5     3      0       REPLICATED
+seeded_greedy      0.473       5     3      0       REPLICATED
+
+Assays evaluated: 8 of 8

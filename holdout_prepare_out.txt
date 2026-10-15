@@ -1,0 +1,18 @@
+loaded CP2C9_HUMAN_Amorosi_2021_activity: 6142 singles, length 490, WT match 1.000
+loaded CASP3_HUMAN_Roychowdhury_2020: 1567 singles, length 258, WT match 1.000
+loaded OXDA_RHOTO_Vanella_2023_activity: 6396 singles, length 364, WT match 1.000
+loaded VKOR1_HUMAN_Chiasson_2020_abundance: 2695 singles, length 163, WT match 1.000
+loaded PTEN_HUMAN_Matreyek_2021: 5083 singles, length 403, WT match 1.000
+loaded EPHB2_HUMAN_Tsuboyama_2023_1F0M: 1239 singles, length 66, WT match 1.000
+loaded TRPC_THEMA_Chan_2017: 1519 singles, length 252, WT match 1.000
+loaded KKA2_KLEPN_Melnikov_2014: 4960 singles, length 264, WT match 1.000
+saved CP2C9_HUMAN_Amorosi_2021_activity (6142 variants, zero-shot rho 0.672)
+saved CASP3_HUMAN_Roychowdhury_2020 (1567 variants, zero-shot rho 0.633)
+saved OXDA_RHOTO_Vanella_2023_activity (6396 variants, zero-shot rho 0.355)
+saved VKOR1_HUMAN_Chiasson_2020_abundance (2695 variants, zero-shot rho 0.503)
+saved PTEN_HUMAN_Matreyek_2021 (5083 variants, zero-shot rho 0.464)
+saved EPHB2_HUMAN_Tsuboyama_2023_1F0M (1239 variants, zero-shot rho 0.680)
+saved TRPC_THEMA_Chan_2017 (1519 variants, zero-shot rho 0.459)
+saved KKA2_KLEPN_Melnikov_2014 (4960 variants, zero-shot rho 0.579)
+
+Peak VRAM (GB): 2.82

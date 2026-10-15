@@ -146,3 +146,39 @@ Campaign-average enrichment (48-192 labels):
 | ucb1          |         2.61 |
 | hybrid1       |         2.96 |
 | seeded_greedy |         3.15 |
+## Pre-specified hold-out test on 8 new assays (see PLAN.md)
+
+Enrichment averaged over assays:
+
+|   n_labels |   random |   zs_greedy |   greedy |   ucb1 |   hybrid1 |   seeded_greedy |
+|-----------:|---------:|------------:|---------:|-------:|----------:|----------------:|
+|         48 |     0.99 |        3.18 |     2.15 |   2.13 |      3.18 |            3.26 |
+|         96 |     0.96 |        3.42 |     3.18 |   3.05 |      3.30 |            3.61 |
+|        144 |     0.98 |        3.14 |     3.22 |   3.21 |      3.34 |            3.49 |
+|        192 |     0.99 |        2.85 |     3.13 |   3.14 |      3.18 |            3.31 |
+
+Campaign-average enrichment (48-192 labels) per assay:
+
+| DMS_id                              |   random |   zs_greedy |   greedy |   ucb1 |   hybrid1 |   seeded_greedy |
+|:------------------------------------|---------:|------------:|---------:|-------:|----------:|----------------:|
+| CASP3_HUMAN_Roychowdhury_2020       |     1.03 |        1.26 |     2.19 |   2.16 |      1.85 |            2.36 |
+| CP2C9_HUMAN_Amorosi_2021_activity   |     0.94 |        8.49 |     6.55 |   6.49 |      7.02 |            7.82 |
+| EPHB2_HUMAN_Tsuboyama_2023_1F0M     |     0.97 |        3.82 |     3.19 |   3.25 |      3.84 |            3.84 |
+| KKA2_KLEPN_Melnikov_2014            |     0.99 |        2.11 |     2.01 |   1.88 |      2.06 |            2.09 |
+| OXDA_RHOTO_Vanella_2023_activity    |     1.00 |        1.82 |     1.81 |   1.70 |      2.16 |            2.18 |
+| PTEN_HUMAN_Matreyek_2021            |     0.97 |        2.21 |     1.69 |   1.68 |      2.22 |            2.00 |
+| TRPC_THEMA_Chan_2017                |     1.03 |        3.83 |     3.76 |   3.85 |      4.16 |            4.53 |
+| VKOR1_HUMAN_Chiasson_2020_abundance |     0.88 |        2.00 |     2.62 |   2.37 |      2.76 |            2.79 |
+
+Paired difference vs greedy in campaign-average enrichment (mean ± SE over 20 seeds):
+
+| DMS_id                              | zs_greedy    | ucb1         | hybrid1      | seeded_greedy   |
+|:------------------------------------|:-------------|:-------------|:-------------|:----------------|
+| CASP3_HUMAN_Roychowdhury_2020       | -0.93 ± 0.20 | -0.03 ± 0.10 | -0.34 ± 0.17 | +0.17 ± 0.24    |
+| CP2C9_HUMAN_Amorosi_2021_activity   | +1.95 ± 0.18 | -0.06 ± 0.23 | +0.47 ± 0.18 | +1.28 ± 0.30    |
+| EPHB2_HUMAN_Tsuboyama_2023_1F0M     | +0.63 ± 0.11 | +0.06 ± 0.07 | +0.64 ± 0.09 | +0.64 ± 0.11    |
+| KKA2_KLEPN_Melnikov_2014            | +0.10 ± 0.09 | -0.13 ± 0.09 | +0.05 ± 0.09 | +0.08 ± 0.12    |
+| OXDA_RHOTO_Vanella_2023_activity    | +0.01 ± 0.12 | -0.11 ± 0.10 | +0.36 ± 0.12 | +0.38 ± 0.15    |
+| PTEN_HUMAN_Matreyek_2021            | +0.52 ± 0.06 | -0.01 ± 0.07 | +0.53 ± 0.07 | +0.31 ± 0.08    |
+| TRPC_THEMA_Chan_2017                | +0.07 ± 0.11 | +0.10 ± 0.08 | +0.40 ± 0.11 | +0.77 ± 0.12    |
+| VKOR1_HUMAN_Chiasson_2020_abundance | -0.63 ± 0.17 | -0.25 ± 0.10 | +0.14 ± 0.15 | +0.17 ± 0.19    |
