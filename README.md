@@ -1,10 +1,14 @@
-# Low-N protein fitness prediction with ESM-2: a benchmark on 8 DMS assays
+# Low-N protein fitness prediction with ESM-2: benchmark and active-learning study on 16 DMS assays
 
 Can a few labeled variants plus a protein language model rank variants and guide
-which ones to test next? Benchmark on 8 ProteinGym assays (single mutants only),
+which ones to test next? Benchmark on 8 development ProteinGym assays (single mutants,
+plus sampled double mutants for 5 of them) and a pre-specified test on 8 further assays,
 run entirely on a 6 GB laptop GPU.
 
+Blog post: [add link after publishing]
+
 ## Main findings
+
 1. **Labels help most where the zero-shot prior is weak.** At N=192 (position-held-out),
    four assays gain +0.19 to +0.25 Spearman over zero-shot ESM-2 (SPA, SPG1,
    Q53Z42-binding, RASK-abundance); the other four gain at most +0.03.
@@ -14,60 +18,74 @@ run entirely on a 6 GB laptop GPU.
    vs 0.525 (held-out positions). Position-specific baselines lose far more.
 4. **Active learning (pool-based, 192 labels):** model-guided greedy/UCB reach ~3.0x
    top-5% enrichment vs ~1.0 for random, winning in 96% of assay x seed campaigns.
-   Zero-shot greedy leads early and then falls behind; the crossover came by ~48-72 labels on the
-   development assays and ~96-144 on the hold-out, whose zero-shot prior was stronger on average.
+   Zero-shot greedy leads early and then falls behind: the crossover came by ~48-72 labels
+   on the development assays and ~96-144 on the hold-out, whose zero-shot prior was stronger
+   on average. Uncertainty-only sampling does not help: below random on average (0.87x),
+   clearly worse in 3 of 8 assays, about equal in 3, slightly better in 2 (GRB2, RASK abundance).
 5. **Using the prior only for the first batch speeds up the campaign.** Choosing round 1 by
    zero-shot score (`hybrid1`), or half of the initial 24 labels (`seeded_greedy`), raised
    campaign-average enrichment (48-192 labels) from 2.84 (greedy) to 3.08 and 3.46.
    At 96 labels `hybrid1` beat greedy in 4 of 8 assays and was worse in none; by 192 labels
    the difference was gone. Two prior-first rounds (`hybrid2`) gave no gain, and the UCB
    weight (0.5-2) made little difference. These strategies were designed after seeing
-   the same 8 assays and need replication on new ones.
+   the same 8 assays (see finding 8 for the test on new ones).
 6. **Models trained on single mutants transfer to double mutants.** Excluding SPA, Spearman on
    doubles at N=192 labeled singles is 0.68 (direct) and 0.69 (summing per-single predictions)
    vs 0.47 for zero-shot; at N=24 the gain is small (0.51 vs 0.47). Summing measured
    single-mutant scores (a reference using all singles) reaches 0.90. Top-10% overlap is weaker:
    0.41 at N=192 vs 0.30 for zero-shot. In SPA, zero-shot is negatively correlated with doubles
-   (-0.23); the cause is not established. Some test doubles contain a training single.
+   (-0.23); cysteine substitutions explain part of it (-0.09 after removing cysteine doubles),
+   and the rest is unexplained (`spa_diag.py`, `spa_cys.py`). Some test doubles contain a
+   training single.
 7. **Active learning on mixed pools (singles + 4,000 sampled doubles, 4 assays).** Guided
    strategies reach 3.1-3.5x top-5% enrichment at 192 labels vs 1.0 for random. `hybrid1` and
    `seeded_greedy` again were never worse than greedy beyond noise (campaign average 2.96 and
    3.15 vs 2.74), but most per-assay differences are within noise. Guided picks were mostly
    singles (5-21% doubles) even though random picks were 57-80% doubles.
-8. **Pre-specified test on 8 new assays** (chosen by a seeded rule; criteria committed in PLAN.md
-   before running; no tuning). Campaign-average top-5% enrichment (48-192 labels, averaged over
-   assays): random 0.98, greedy 2.98, hybrid1 3.26, seeded_greedy 3.45. Paired against greedy,
-   hybrid1 gained +0.28 (better in 5 assays, worse in 0) and seeded_greedy +0.47 (better in 5,
-   worse in 0), meeting the pre-specified criteria. The effects are modest (about 10-16% of greedy's
-   enrichment), shrink by 192 labels (+0.05 and +0.18), and the hold-out contains no binder
-   assays (its one 'Binding' assay, CP2C9, is an enzyme with an activity readout)(criteria and assay list committed in 71e09a1, before any hold-out script or result was added to the repo).
+8. **Pre-specified test on 8 new assays** (chosen by a seeded rule; criteria and assay list
+   committed in `71e09a1` before any hold-out script or result was added to the repo; no tuning).
+   Campaign-average top-5% enrichment (48-192 labels, averaged over assays): random 0.98,
+   greedy 2.98, hybrid1 3.26, seeded_greedy 3.45. Paired against greedy, hybrid1 gained +0.28
+   (better in 5 assays, worse in 0) and seeded_greedy +0.47 (better in 5, worse in 0), meeting
+   the pre-specified criteria. The effects are modest (about 10-16% of greedy's enrichment),
+   shrink by 192 labels (+0.05 and +0.18), and the hold-out contains no binder assays (its one
+   'Binding' assay, CP2C9, is an enzyme with an activity readout).
 
 ## Reproduce
-```bash
+
+```
 conda create -n lown python=3.10 -y && conda activate lown
 pip install torch --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
-bash run_all.sh        # GPU needed for baselines.py and embed.py only
+bash run_all.sh        # GPU needed for baselines.py, embed.py, build_pools.py, holdout_prepare.py
 ```
-Outputs go to `data/selected/` and `results/` (tables in `results/RESULTS.md`).
+
+The full pipeline takes hours, mostly in the embedding steps. Outputs go to `data/selected/`
+and `results/` (tables in `results/RESULTS.md`). `download_data.sh` fetches the ProteinGym
+files, which are not redistributed here.
 
 ## Methods
-- Data: 8 ProteinGym assays (single mutants only), chosen by me with a binding focus.
-- Zero-shot: ESM-2 650M wild-type marginals. Embeddings: ESM-2 650M, fp16, at the mutated position.
+
+- Data: 8 development assays chosen by me with a binding focus (single mutants; the mixed-pool
+  experiments add up to 4,000 sampled double mutants), plus 8 hold-out assays chosen by
+  `select_holdout.py` (seed 2026), single mutants only.
+- Zero-shot: ESM-2 650M wild-type marginals; for doubles, the sum of the single-site scores.
+  Embeddings: ESM-2 650M, fp16, at the mutated position (mean over the two positions for doubles).
 - Models: ridge on embeddings; zero-shot score calibrated on training labels plus
   ridge on the residual (`ridge_pos+zs`); Bayesian ridge on 64 PCA components for active learning.
 - Splits: random, and position-held-out (test positions never seen in training). 20 seeds.
 
 ## Limitations
-- Single mutants only; pools are near-saturated libraries, so active-learning numbers
+
+- Pools of single mutants are near-saturated libraries, so active-learning numbers
   are optimistic compared with real campaigns.
-- Only 8 assays, hand-selected. The prior-strong/weak grouping was defined after seeing results.
+- Only 8 development assays, hand-selected. The prior-strong/weak grouping was defined after seeing results.
 - One PLM, ridge-style models only, untuned hyperparameters (beta=1, 64 PCA dims).
 - No wet-lab validation. Assay readout descriptions come from ProteinGym metadata
   and should be checked against the original papers.
 - SPG1 is supplied as a long sequence with a short mutated domain; zero-shot may be
   affected by this (untested).
-- Nine strategy configurations were compared on the same 8 assays, and ~128 paired
+- Nine strategy configurations were compared on the same 8 development assays, and ~128 paired
   comparisons were made at a 2-SE threshold, so best-of-nine results are optimistic
   and isolated per-assay differences may be chance.
 - Mixed-pool experiments use sampled doubles, and the top-5% target is defined within the pool,
@@ -75,10 +93,13 @@ Outputs go to `data/selected/` and `results/` (tables in `results/RESULTS.md`).
   pool composition, not independent replication.
 - In the transfer experiment, some test doubles contain a single that was in the training set,
   which makes transfer look easier than for a fully new double.
-- The hold-out test used the same model and settings as development, and the success rule needed
-  only a positive mean difference and more assays better than worse (no minimum effect size).
-  The hold-out's mean zero-shot Spearman (0.54) was higher than the development set's (0.41).
+- The hold-out test used the same model and settings as development, and its success rule needed
+  only a positive mean difference and more assays better than worse. The hold-out's mean
+  zero-shot Spearman (0.54) was higher than development's (0.41).
+- Reported SEs reflect variation across random starting sets within each assay, not variation
+  across proteins. Greedy vs UCB differences were not tested directly.
 
 ## Credits
+
 ProteinGym (Notin et al., 2023), ESM-2 (Lin et al., 2023), and the original DMS
 studies of each assay. Check ProteinGym's license terms before redistributing any data.
