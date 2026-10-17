@@ -5,7 +5,7 @@ which ones to test next? Benchmark on 8 development ProteinGym assays (single mu
 plus sampled double mutants for 5 of them) and a pre-specified test on 8 further assays,
 run entirely on a 6 GB laptop GPU.
 
-Blog post: [add link after publishing]
+Blog post: https://awbadzuild.github.io/esm2-low-n-active-learning/
 
 ## Main findings
 
