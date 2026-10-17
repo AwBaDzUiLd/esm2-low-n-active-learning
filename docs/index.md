@@ -9,146 +9,123 @@ By Abdul Wazid Shaik, independent protein design researcher. Code, data pipeline
 
 ## Abstract
 
-Given a lab budget sufficient for measuring a dozen or so variants, how much can a protein language model plus a simple model help, and should the model choose which variants to measure? I evaluated on 16 publicly available deep mutational scanning assays from ProteinGym using ESM-2 650M on a laptop with an RTX 3050 (6 GB); peak memory usage 2.8 GB.
+Given a lab budget sufficient for measuring a few dozen variants, how much can a protein language model plus a simple model help, and should the model choose which variants to measure? I evaluated this on 16 publicly available deep mutational scanning assays from ProteinGym, using ESM-2 650M on a laptop with an RTX 3050 (6 GB). In the development runs, peak GPU memory stayed under 3 GB (1.3 to 2.8 GB).
 
 The main results are:
 
-- Labels help most where the zero-shot model is bad: a 0.25 increase in Spearman rank correlation (for four out of eight assays) with 192 variants labeled and a position-held-out validation split, compared to zero-shot ESM-2. The other four assays saw little improvement (0.03 or less).
+- Labels help most where the zero-shot model is weak. With 192 labeled variants and a position-held-out split, four of eight assays gained 0.19 to 0.25 Spearman rank correlation over zero-shot ESM-2. The other four assays gained 0.03 or less.
 
-- Performance is overstated with random train/test splits: for the best model on 192 labels, the Spearman rank correlation was 0.656 (random split) versus 0.525 with test positions unseen during training.
+- Performance is overstated with random train/test splits. For the best model at 192 labels, the Spearman rank correlation was 0.656 on a random split and 0.525 with test positions unseen during training.
 
-- Model-guided selection finds three times as many top 5% variants as random picking within 192 labels.
+- In simulated campaigns, model-guided selection finds about three times as many top-5% variants as random picking within 192 labels.
 
-- Using the zero-shot score to prioritize some of the first mutations can boost campaigns, especially with small numbers of labels. The effect size was moderate (but present) on 8 assays selected with a different rule and a pre-registered plan.
+- Using the zero-shot score to choose part of the first mutations can speed up a campaign, especially with small numbers of labels. This held on 8 new assays chosen by a seeded rule under a plan committed before the test. The effect was modest, about 9 to 16% of greedy's enrichment.
 
 ## Methods
 
-Data: Eight assays from ProteinGym were used for development, selected based on diversity of binding partners and other criteria. Eight more were selected for the hold-out set with a seeded random number generator. The majority of the assays are binding and expression readouts.
+Data: Eight assays from ProteinGym were used for development, chosen by hand with a focus on binding. Most of them have binding or expression readouts. Eight more were selected for the hold-out set with a seeded random number generator, and none of them shares a protein with the development assays. The main experiments use single mutants. The mixed-pool experiments add up to 4,000 sampled double mutants per assay.
 
-Models: Zero-shot scores are logits of the mutant residue relative to the wt residue from ESM-2 650M. Supervised models use features from ESM-2 at the mutated position with ridge regression. The best low-N model was calibrated on the training set labels to adjust the zero-shot score, then ridge regression was used on the residual error.
+Models: Zero-shot scores are the log-probability of the mutant residue minus that of the wild-type residue, from ESM-2 650M. Supervised models use features from ESM-2 at the mutated position with ridge regression. The best low-N model was calibrated on the training-set labels to adjust the zero-shot score, then ridge regression was used on the residual error.
 
-Evaluation: Training sizes of 24, 48, 96 and 192 variants with 20 random seeds each. Two types of train/test splits were used: random, and position-held-out, where test variants have positions not seen during training. The position-held-out split is more realistic for protein design as a designer typically explores novel positions during a campaign.
+Evaluation: Training sizes of 24, 48, 96 and 192 variants, with 20 random seeds each. Two types of train/test splits were used: random, and position-held-out, where test variants sit at positions not seen during training. The position-held-out split is more realistic for protein design, since a designer often explores new positions during a campaign.
 
-## Discovery 1: value of labels depends on the zero-shot prior
+## Discovery 1: the value of labels depends on the zero-shot prior
 
-Averaged across the eight development assays on the position-held-out split, the calibrated model had a Spearman rank correlation of 0.424 at 24 labels and 0.525 at 192, compared to 0.406 for the zero-shot model. This masks a divide-and-conquer pattern, however: the assays can be grouped based on how much the zero-shot model already knows.
+Averaged across the eight development assays on the position-held-out split, the calibrated model had a Spearman rank correlation of 0.424 at 24 labels and 0.525 at 192, compared to 0.406 for the zero-shot model. This average hides two groups, split by how much the zero-shot model already knows.
 
 | Assay (position-held-out, 192 labels) | Zero-shot | With labels | Gain |
-
-| --- | --- | --- | --- |
-
+|---|---|---|---|
 | SPA stability | 0.280 | 0.531 | +0.251 |
-
 | RASK abundance | 0.195 | 0.433 | +0.238 |
-
 | SPG1 binding | 0.275 | 0.476 | +0.201 |
-
 | Q53Z42 binding | 0.316 | 0.503 | +0.188 |
+| Other four assays | 0.346 to 0.715 | n/a | +0.006 to +0.027 |
 
-| Other four assays | 0.346 to 0.715 | | +0.006 to +0.027 |
-
-Where the zero-shot model was good (SPA binding), adding 192 labels helped little, while the worst zero-shot assay (SPG1 binding) saw a 0.2 gain. At 24 labels, the supervised model had roughly the same performance as the zero-shot model: it outperformed the zero-shot model in 76% of held-out runs at 24 labels and 88% at 192.
+Where the zero-shot model was already strong (GRB2, RASK binding, Q53Z42 expression, CCR5), 192 labels added at most +0.027. Where it was weak (SPA stability, RASK abundance, SPG1, Q53Z42 binding), the same labels added +0.19 to +0.25. At 24 labels the supervised model mostly falls back to the prior, though it still beat zero-shot in 76% of held-out runs at 24 labels and 88% at 192.
 
 ## Discovery 2: beware the random splits
 
-For the best model (192 labels), the difference between the random and position-held-out splits was 0.13 in Spearman rank correlation. For a per-position model, the difference was much larger. Small domains have a large fraction of positions in the test set, and a random split means that the model has seen most positions during training. Unless stated otherwise, low-N results should use the position-held-out split.
+For the best model at 192 labels, the difference between the random and position-held-out splits was 0.13 in Spearman rank correlation. For a model that learns one weight per position, the difference was much larger. On small domains, a random split covers almost every position, so the model has already seen the positions it is tested on. Low-N results should be reported on a position-held-out split.
 
-## Discovery 3: active learning finds better variants, but the value depends on the batch
+## Discovery 3: model-guided selection finds more top variants
 
-I evaluated the value of model-assisted active learning on single-mutant pools. The process was to pick a random set of 24 variants at the beginning of the process, then 24 additional variants per round for seven rounds (192 labels total). The metric was the enrichment of the true top 5% of variants in the pool.
+I evaluated model-assisted active learning on single-mutant pools. The process was to pick a random set of 24 variants at the start, then 24 additional variants per round for seven rounds (192 labels in total). The metric was the enrichment of the true top 5% of variants in the pool, where 1.0 means no better than random picking.
 
 | Strategy | Enrichment at 192 labels (development assays) |
-
-| --- | --- |
-
+|---|---|
 | Random | 0.98 |
-
 | Zero-shot score only | 1.99 |
-
 | Prediction (greedy) | 3.00 |
-
-| Prediction + uncertainty bonus | 3.01 |
-
+| Prediction plus uncertainty bonus | 3.01 |
 | Uncertainty only | 0.87 |
 
-Greedy picking outperformed random picking in 96% of assay-by-seed campaigns. Interestingly, picking by uncertainty only underperformed random selection on average. There was no value in exploring variants with high uncertainty, at least not when the objective was to find high-scoring variants. Zero-shot ranking outperformed greedy picking at early stages (up to 48 to 72 labels), but greedy took over afterwards. ![Active learning: top-5% enrichment by strategy](assets/active_summary.png)
+Greedy picking outperformed random picking in 96% of assay-by-seed campaigns (ties counted as half). Picking by uncertainty alone did worse than random on average: clearly worse in 3 of 8 assays, about equal in 3, and slightly better in 2 (GRB2 and RASK abundance). So exploring for its own sake did not help when the objective was to find high-scoring variants. The zero-shot ranking led at 48 labels, roughly tied with greedy by 72, and fell behind afterwards.
+
+![Active learning: top-5% enrichment by strategy](https://awbadzuild.github.io/esm2-low-n-active-learning/assets/active_summary.png)
+
+*Top-5% enrichment against number of labels for each strategy, on all eight development assays and on two groups defined by zero-shot strength. The grouping was defined after seeing the results.*
 
 ## Discovery 4: use the zero-shot prior for the first mutations (pre-registered)
 
-The success of zero-shot scoring at early stages suggested a hybrid approach: use the zero-shot scores to select the first 24 variants, then continue with model-based picking, resulting in hybrid1. A similar strategy, seeded_greedy, used zero-shot scores to select half of the first 24 variants. Both approaches performed well in the development phase, but I could not trust the results because I cherry-picked the assays. Before doing any analysis on the new assays, I committed to a plan (PLAN.md) in the repository.
+The early lead of zero-shot suggested a hybrid approach. In hybrid1, the first model-guided batch (the 24 picks after the random initial 24) is chosen by zero-shot score, and the model takes over afterwards. A similar strategy, seeded_greedy, chooses 12 of the initial 24 variants by zero-shot score. Both performed well on the development assays: campaign-average enrichment (48 to 192 labels) was 2.84 for greedy, 3.08 for hybrid1 and 3.46 for seeded_greedy. Two prior-first rounds (hybrid2) gave no gain. But I designed these strategies after seeing those assays, so I did not trust that result. Before doing any analysis on new assays, I committed a plan (PLAN.md) to the repository.
 
-The plan was to evaluate eight assays selected with a seeded random number generator, none of which shared a protein with the development assays. The metric was again enrichment of the top 5% of a pool, but with a stricter success criterion: the mean enrichment across assays had to be positive, and more assays had to improve than decrease compared to random picking. The results were:
+The plan evaluated eight assays selected with a seeded random number generator, none sharing a protein with the development assays. The metric was campaign-average top-5% enrichment (mean over 48 to 192 labels). A strategy counted as replicated if its mean paired difference against greedy was positive and it beat greedy in more assays than it lost to it. The rule was permissive: there was no minimum effect size. The results were:
 
 | Strategy | Campaign-average enrichment (48 to 192 labels) | Paired gain vs greedy | Assays better / same / worse |
-
-| --- | --- | --- | --- |
-
+|---|---|---|---|
 | Random | 0.98 | | |
-
 | Greedy | 2.98 | | |
-
 | hybrid1 | 3.26 | +0.28 | 5 / 3 / 0 |
-
 | seeded_greedy | 3.45 | +0.47 | 5 / 3 / 0 |
 
-Both strategies met the success criterion. The improvements were moderate compared to greedy selection, amounting to 10 to 16% of its enrichment. The gains decreased with more labels: at 192 labels, the paired differences were +0.05 for hybrid1 and +0.18 for seeded_greedy. Thus, hybrid approaches are useful at the beginning of a campaign when the model has little data to work with. This was most evident for seeded_greedy, which was tied with random at 48 labels but outperformed it at later stages. One assay (CASP3) was close to failure for hybrid1: at about two standard errors below the mean of greedy.
+Both strategies met the success criterion. The improvements were modest, about 9 to 16% of greedy's enrichment, and they shrank with more labels. Averaged over the eight hold-out assays (1.0 = random):
 
-The content and the choice of assays were committed to in 71e09a1 in the repository before any hold-out scripts or results were added. The order is visible in the git history. To summarize, I had little confidence in the development results because I knew the assays, but the hold-out results were positive.
+| Labels | Random | Greedy | hybrid1 | seeded_greedy |
+|---|---|---|---|---|
+| 48 | 0.99 | 2.15 | 3.18 | 3.26 |
+| 96 | 0.96 | 3.18 | 3.30 | 3.61 |
+| 192 | 0.99 | 3.13 | 3.18 | 3.31 |
+
+At 192 labels the paired differences were only +0.05 for hybrid1 and +0.18 for seeded_greedy. The benefit is speed early in a campaign, which matters when each round costs wet-lab money. One assay (CASP3) was borderline for hybrid1, about two standard errors below greedy. I did not run significance tests beyond these standard errors.
+
+The criteria and the assay list were committed in 71e09a1 before any hold-out script or result was added to the repository, so the order is visible in the git history. In short, I did not trust the development results because the strategies were designed on those assays, and the hold-out result is the one to rely on.
 
 ## More data: double mutants
 
-On pools that contained both single and double mutants (with 4,000 double mutants sampled uniformly at random), the trends were similar to the single-mutant case, albeit with smaller differences. A model trained on N labeled single mutants can be used to rank double mutants. At 192 labeled singles, the Spearman correlation for doubles was 0.68 to 0.69 (excluding one outlier assay) compared to 0.47 for the zero-shot model. Summing single mutant scores, which uses all available data, achieved 0.90, indicating that at small N, the value of additional data outweighs the value of epistasis modeling.
+On pools containing singles plus up to 4,000 sampled double mutants (four assays), the trends were similar to the single-mutant case, with smaller differences. Guided strategies reached 3.1 to 3.5 times enrichment at 192 labels, and hybrid1 and seeded_greedy were again never clearly worse than greedy (campaign averages 2.96 and 3.15 against 2.74). SPA was left out of this experiment because the top 5% of its pool was almost entirely single mutants.
 
-The assay SPA was an outlier in several ways: the zero-shot scores were anticorrelated with its double mutant scores (r = -0.23). The positions are correctly numbered (0 of 1070 doubles had incorrect numbering), so this is not due to incorrect sequence alignment. Cysteine substitutions seem to underperform overall: they comprise 10% of the double mutants but 52% of the top 54, while ESM-2 scores them lower than other substitutions (mean -10.6 vs -8.2) and the assay rewards them (mean score -0.60 vs -1.23). The same pattern holds for single mutants: ESM-2 scores for cysteine vs all other substitutions are -6.4 vs -4.2, and the assay scores are +0.06 vs -0.50.
+A model trained on N labeled single mutants can also rank double mutants. At 192 labeled singles, the Spearman correlation on doubles was 0.68 to 0.69 (excluding SPA) compared to 0.47 for the zero-shot model. Summing the measured single-mutant scores, which uses all the single-mutant data, reached 0.90. So at small N the limit is the accuracy of single-mutant predictions rather than epistasis. Some test doubles contain a single that was in the training set, which makes this transfer look somewhat easier than for a fully new double.
 
-Excluding all cysteine double mutants moves the correlation with zero-shot scores from -0.23 to -0.09. Similarly, the correlation with single mutant scores changes from +0.36 to +0.24 (excluding cysteine). That masks a much stronger signal for cysteine-containing double mutants: their mean score is +2.33, suggesting that a designer should prioritize double mutants that include a cysteine substitution at position 34 (D34C) and another at position 36. For reference, the top double mutant scores are +3.44 (vs +3.30 for D34C alone). Cysteine seems particularly valuable in this domain, possibly because of the ability to form disulfide bonds.
+One assay, SPA, behaved strangely: zero-shot scores were negatively correlated with its double mutants (-0.23). The numbering is correct (0 of 1,070 doubles mismatched the sequence), and cysteine substitutions explain part of the problem but not all of it. Cysteine variants are 10% of the doubles but 52% of the top 54, and ESM-2 scores them lower (mean -10.6 against -8.2 for the rest) while the assay rewards them (mean score -0.60 against -1.23). The same pattern shows up in single mutants: zero-shot -6.4 against -4.2, and assay score +0.06 against -0.50, for cysteine against all other substitutions.
 
-This domain has unusual properties: the best single mutant scores (SPA binding energy) are achieved by D34C (value +1.84) but it is ranked 82nd by the zero-shot model (p-value 0.087). Zero-shot scores for D34C are -6.4 compared to -4.2 for all other single mutants. Summing single mutants scores has an opposite effect: it elevates D34C to the 5th percentile.
-
-This illustrates that the zero-shot model is not always a good prior. It underestimates the value of single and double cysteine substitutions in this domain. The reason is unclear, but one possibility is that the sum of single-site scores is a poor approximation for two substitutions that are close to each other (have overlapping side-chains). I have not evaluated this hypothesis. These were informal analyses: the main point is that double mutant pooling is a way to prioritize mutants with beneficial interactions.
-
-Other limitations apply: small effect sizes, uninteresting effect directions (higher variance), and an incomplete hold-out set. See the limitations section for details.
-
-## Results
-
-The main results are summarized in the table below.
-
-| Assay | Mean enrichment (standard error) at 48/96/192 labels |
-
-| --- | --- |
-
-| hybrid1 | 3.07/3.38/3.26 (0.26) |
-
-| seeded_greedy | 3.04/3.60/3.45 (0.21) |
-
-| random | 1.39/2.02/2.98 (0.18) |
-
-| greedy | 2.98/3.34/3.54 (0.15) |
-
-The mean enrichment increased with the number of labels, as expected, but the standard error was large (about 20% of the mean). For example, hybrid1 was better than random at 48 and 96 labels (p < 0.05), but not at 192. At 96 labels, hybrid1 and seeded_greedy were tied with greedy.
+Removing every cysteine double moves the correlation from -0.23 to -0.09, which is near zero rather than positive. So the prior carries almost no signal for the other 959 doubles, even though it works for singles (+0.36 without cysteine). I do not know why. One candidate is that summing single-site scores is a poor proxy for pairs of nearby substitutions, which I have not tested. These subset analyses were exploratory, and many of the top doubles pair D34C with a substitution at position 36, so treat the cysteine result as specific to this domain. Zero-shot ESM-2 is not a safe default where your variants include chemistry the model dislikes.
 
 ## Limitations
 
-- Eight development assays and eight hold-out assays are too few, and the development assays were cherry picked on diversity. The hold-out set does not include any binder assays; the one assay categorized as Binding is actually an enzyme with an activity readout. The hold-out set had a better zero-shot prior (mean rank correlation 0.54 vs 0.41), potentially biasing the results.
+- Eight development assays and eight hold-out assays are a small sample, and the development assays were chosen by hand with a binding focus. The hold-out set does not include any binder assays; the one assay categorized as Binding (CP2C9) is an enzyme with an activity readout. The hold-out set also had a stronger zero-shot prior (mean rank correlation 0.54 against 0.41), which may favour prior-based strategies.
 
-- The success rule was lenient: only required a positive mean difference and more assays improved than hurt, with no minimum effect size.
+- The success rule was permissive: it required only a positive mean difference and more assays better than worse, with no minimum effect size.
 
-- The uncertainty estimates are not informative about between-protein variation. They reflect the variance between repeated experiments on the same protein.
+- Nine strategy configurations were compared on the same development assays, so best-of-nine results are optimistic and isolated per-assay differences may be chance.
 
-- The analysis uses nearly complete single-mutant scans: a real-world campaign would have much smaller pools. The top 5% threshold makes the enrichment optimistic compared to picking a random subset of variants to measure.
+- The standard errors reflect variation across random starting sets within each assay, not variation across proteins.
 
-- One model (zero-shot), one type of surrogate model (ridge regression), untuned hyperparameters, and no wet-lab evaluation.
+- The pools are near-complete single-mutant scans (plus sampled doubles in the mixed-pool experiments), so enrichment is optimistic compared with a real campaign, and the top 5% is defined within each pool.
 
-- Assay descriptions are from ProteinGym's metadata and should be treated as such.
+- One language model (ESM-2 650M), ridge-style surrogates, untuned hyperparameters, and no wet-lab validation.
+
+- Assay descriptions come from ProteinGym's metadata and should be checked against the original papers.
 
 ## Reproduce
 
-The repository has a one-command pipeline. The only step that requires a GPU is the embedding generation, and 6 GB is sufficient. Please file an issue if you cannot reproduce the results.
+The repository has a one-command pipeline. Only the steps that run ESM-2 need a GPU, and 6 GB was enough for me. The full pipeline takes hours, mostly in the embedding steps. Please file an issue if you cannot reproduce the results.
 
 ## What I want feedback on
 
-If you are working on low-N engineering or active learning for proteins, I would like to hear your thoughts on whether Gaussian process or neural surrogates change the picture, and which binder data sets I should use for the next hold-out.
+If you are working on low-N engineering or active learning for proteins, I would like to hear whether Gaussian process or neural surrogates change the picture, and which binder datasets I should use for the next hold-out.
 
 ## Credits
 
-ProteinGym (Notin et al., 2023), ESM-2 (Lin et al., 2023), and the original authors of each deep mutational scanning dataset. Check the ProteinGym license for redistribution permissions.
+ProteinGym (Notin et al., 2023), ESM-2 (Lin et al., 2023), and the original authors of each deep mutational scanning dataset. Check ProteinGym's license terms before redistributing any data.
+
+A note on process: I used an AI assistant to help plan the analysis, write code and draft this post. All numbers come from the saved outputs in the repository (the results folder and the *_out.txt files).
